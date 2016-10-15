@@ -1,0 +1,34 @@
+---
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:hsqldb:mem:vaadin-pagination:charaset=UTF-8
+    username: sa
+    password:
+    driver-class-name: org.hsqldb.jdbcDriver
+  jpa:
+    properties:
+      hibernate:
+        show-sql: true
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    org.springframework: INFO
+    com.vaadin.addon.pagination: DEBUG
+vaadin:
+  servlet:
+    productionMode: true
+
+---
+spring:
+  profiles: mysql
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/vaadin-pagination?serverTimezone=UTC
+    username: root
+    password: abcde12#
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      hibernate.hbm2ddl.auto: create-drop
