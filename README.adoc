@@ -2,7 +2,7 @@
 
 Pagination is a UI component add-on for Vaadin 7.
 
-image::data/screenshot/jpa.png[]
+image::data/screenshot/pagination.png[]
 
 [source,java,indent=0]
 ----
@@ -32,6 +32,7 @@ image::data/screenshot/jpa.png[]
 [source,java,indent=0]
 ----
 public static List<User> userList = new ArrayList<>();
+//...
 
 final int page = 1;
 final int limit = 20;
@@ -52,14 +53,15 @@ pagination.addPageChangeListener(new PaginationChangeListener() {
     }
 });
 
+//...
 private Table createTable(List<User> users) {
-    final Table table = new Table();
-    table.setSizeFull();
-    table.setContainerDataSource(new BeanItemContainer<>(User.class, users));
-    table.setVisibleColumns("id", "name","email");
-    table.setColumnHeaders("ID", "Name","Email");
-    return table;
-}
+        final Table table = new Table();
+        table.setSizeFull();
+        table.setContainerDataSource(new BeanItemContainer<>(User.class, users));
+        table.setVisibleColumns("id", "name","email");
+        table.setColumnHeaders("ID", "Name","Email");
+        return table;
+    }
 
 private Pagination createPagination(long total, int page, int limit) {
     final PaginationResource paginationResource = PaginationResource.newBuilder().setTotal(total).setPage(page).setLimit(limit).build();
@@ -75,7 +77,8 @@ private Pagination createPagination(long total, int page, int limit) {
 ----
 @Autowired
 UserRepository userRepository;
-    
+//...
+
 final int page = 1;
 final int limit = 10;
 
@@ -95,33 +98,49 @@ pagination.addPageChangeListener(new PaginationChangeListener() {
         }
     }
 });
+
+//...
+public Page<User> findAll(int page, int size) {
+    Pageable pageable = new PageRequest(page, size);
+    Page<User> users = userRepository.findAll(pageable);
+    return users;
+}
 ----
 
 === Vaadin Table + Pagination
 
 [source,java,indent=0]
 ----
+@Autowired
+UserRepository userRepository;
+//...
+
 final int page = 1;
 final int limit = 10;
 
-final List<User> users = userRepository.findAll();
-final long total = users.size();
+final Page<User> users = findAll(0, limit);
+final long total = users.getTotalElements();
 
-final Table table = createTable(users);
-table.setWidth(100, Unit.PERCENTAGE);
-table.setHeightUndefined();
-table.setPageLength(limit);
-
+final Table table = createTable(users.getContent());
 final Pagination pagination = createPagination(total, page, limit);
-pagination.setItemsPerPageVisible(false);
 pagination.addPageChangeListener(new PaginationChangeListener() {
     @Override
     public void changed(PaginationResource event) {
-        log.debug("tableFindAll : {}", event.toString());
-        table.setPageLength(event.limit());
-        table.setCurrentPageFirstItemIndex(event.offset());
+        log.debug("jpaPagable : {}", event.toString());
+        table.removeAllItems();
+        Page<User> users = findAll(event.pageIndex(), event.limit());
+        for(User user : users) {
+            table.addItem(user);
+        }
     }
 });
+
+//...
+public Page<User> findAll(int page, int size) {
+    Pageable pageable = new PageRequest(page, size);
+    Page<User> users = userRepository.findAll(pageable);
+    return users;
+}
 ----
 
 
