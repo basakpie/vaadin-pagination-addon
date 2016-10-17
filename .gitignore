@@ -37,6 +37,3 @@ hs_err_pid*
 *.log
 /.apt_generated/
 
-# Project Test Files #
-**/src/main/webapp/VAADIN/widgetsets
-**/src/main/webapp/VAADIN/themes/**
