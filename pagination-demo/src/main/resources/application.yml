@@ -16,9 +16,6 @@ logging:
   level:
     org.springframework: INFO
     com.vaadin.addon.pagination: DEBUG
-vaadin:
-  servlet:
-    productionMode: true
 
 ---
 spring:

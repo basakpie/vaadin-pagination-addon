@@ -149,7 +149,7 @@ public Page<User> findAll(int page, int size) {
 [source,groovy,indent=0]
 ----
 mvn clean install
-mvn -p pagination-demo spring-boot:run
+mvn -pl pagination-demo spring-boot:run
 ----
 
 Demo Server : http://127.0.0.1:8080
