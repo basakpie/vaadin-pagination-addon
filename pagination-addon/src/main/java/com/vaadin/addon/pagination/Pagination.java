@@ -71,6 +71,11 @@ public class Pagination extends HorizontalLayout {
             throw new IllegalArgumentException("itemsPerPageSelect.isSelected(paginationResource.size()) not found!");
         }
     }
+    
+    public void setTotalCount(long total) {
+    	paginationResource.setTotal(total);
+    	totalPageLabel.setValue(String.valueOf(paginationResource.totalPage()));
+    }
 
     public void setItemsPerPageEnabled(boolean enabled) {
         itemsPerPage.setEnabled(enabled);

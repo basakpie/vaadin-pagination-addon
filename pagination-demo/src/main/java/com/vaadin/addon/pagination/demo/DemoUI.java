@@ -86,8 +86,9 @@ public class DemoUI extends UI {
             @Override
             public void changed(PaginationResource event) {
                 log.debug("jpaPagable : {}", event.toString());
-                table.removeAllItems();
                 Page<User> users = findAll(event.pageIndex(), event.limit());
+                pagination.setTotalCount(users.getTotalElements());                
+                table.removeAllItems();                
                 for(User user : users) {
                     table.addItem(user);
                 }
