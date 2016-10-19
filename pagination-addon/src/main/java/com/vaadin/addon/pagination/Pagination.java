@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -199,14 +201,14 @@ public class Pagination extends HorizontalLayout {
         currentPageTextField.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         currentPageTextField.setImmediate(true);
 
+        currentPageTextField.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+            @Override
+            public void handleAction(Object sender, Object target) {
+                currentPageChangedEvent();
+            }
+        });
         currentPageTextField.addValueChangeListener((Property.ValueChangeListener) event -> {
-            int currentPage = Integer.valueOf(String.valueOf(currentPageTextField.getValue()));
-            int pageNumber = paginationResource.page();
-            if (!currentPageTextField.isValid()) return;
-            if (currentPageTextField.getValue()==null) return;
-            if (currentPage==pageNumber) return;
-            paginationResource.setPage(currentPage);
-            firePagedChangedEvent();
+            currentPageChangedEvent();
         });
 
         currentPageTextField.setWidth("50px");
@@ -224,6 +226,16 @@ public class Pagination extends HorizontalLayout {
         layout.setComponentAlignment(sepLabel, Alignment.MIDDLE_LEFT);
         layout.setComponentAlignment(totalPageLabel, Alignment.MIDDLE_LEFT);
         return layout;
+    }
+
+    private void currentPageChangedEvent() {
+        int currentPage = Integer.valueOf(String.valueOf(currentPageTextField.getValue()));
+        int pageNumber = paginationResource.page();
+        if (!currentPageTextField.isValid()) return;
+        if (currentPageTextField.getValue()==null) return;
+        if (currentPage==pageNumber) return;
+        paginationResource.setPage(currentPage);
+        firePagedChangedEvent();
     }
 
     private void buttonClickEvent(PaginationResource change) {

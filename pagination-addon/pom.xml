@@ -5,7 +5,7 @@
 	<groupId>com.vaadin.addon</groupId>
 	<artifactId>pagination</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>Pagination</name>
 
 	<prerequisites>

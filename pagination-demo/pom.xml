@@ -5,7 +5,7 @@
 	<groupId>com.vaadin.addon</groupId>
 	<artifactId>pagination-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>Paginatnion Add-on Demo</name>
 
 	<prerequisites>
