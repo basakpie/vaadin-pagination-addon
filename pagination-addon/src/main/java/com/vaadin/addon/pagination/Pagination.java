@@ -25,7 +25,7 @@ public class Pagination extends HorizontalLayout {
 
     private static final long serialVersionUID = 1L;
 
-    final List<PaginationChangeListener> listeners = new ArrayList<PaginationChangeListener>();
+    final List<PaginationChangeListener> listeners = new ArrayList<>();
 
     private PaginationResource paginationResource;
 
@@ -42,13 +42,17 @@ public class Pagination extends HorizontalLayout {
     final Button nextButton     = new Button(FontAwesome.ARROW_CIRCLE_O_RIGHT);
     final Button lastButton     = new Button(FontAwesome.ARROW_CIRCLE_RIGHT);
 
+    public Pagination() {
+
+    }
+
     public Pagination(PaginationResource paginationResource) {
         setWidth("100%");
         setSpacing(true);
         init(paginationResource);
     }
 
-    private void init(PaginationResource resource) {
+    protected void init(PaginationResource resource) {
         if(getComponentCount()>0) {
             removeAllComponents();
         }
@@ -191,11 +195,12 @@ public class Pagination extends HorizontalLayout {
         return layout;
     }
 
-    private HorizontalLayout createPageFields() {
+    @SuppressWarnings("serial")
+	private HorizontalLayout createPageFields() {
         currentPageTextField.setValue(String.valueOf(paginationResource.page()));
         currentPageTextField.setConverter(Integer.class);
 
-        final IntegerRangeValidator validator = new IntegerRangeValidator("Wrong page number", 0, (int) paginationResource.total());
+        final IntegerRangeValidator validator = new IntegerRangeValidator("Wrong page number", 0, paginationResource.totalPage());
         currentPageTextField.addValidator(validator);
 
         currentPageTextField.setStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -228,17 +233,16 @@ public class Pagination extends HorizontalLayout {
         return layout;
     }
 
-    private void currentPageChangedEvent() {
+    protected void currentPageChangedEvent() {
         int currentPage = Integer.valueOf(String.valueOf(currentPageTextField.getValue()));
         int pageNumber = paginationResource.page();
         if (!currentPageTextField.isValid()) return;
-        if (currentPageTextField.getValue()==null) return;
         if (currentPage==pageNumber) return;
         paginationResource.setPage(currentPage);
         firePagedChangedEvent();
     }
 
-    private void buttonClickEvent(PaginationResource change) {
+    protected void buttonClickEvent(PaginationResource change) {
         paginationResource.setTotal(change.total());
         paginationResource.setPage(change.page());
         paginationResource.setLimit(change.limit());
@@ -246,7 +250,7 @@ public class Pagination extends HorizontalLayout {
         firePagedChangedEvent();
     }
 
-    private void firePagedChangedEvent() {
+    protected void firePagedChangedEvent() {
         buttonsEnabled();
         currentPageTextField.setValue(String.valueOf(paginationResource.page()));
         totalPageLabel.setValue(String.valueOf(paginationResource.totalPage()));
@@ -258,10 +262,31 @@ public class Pagination extends HorizontalLayout {
         }
     }
 
-    private void buttonsEnabled() {
+    protected void buttonsEnabled() {
         firstButton.setEnabled(!this.paginationResource.isFirst());
         previousButton.setEnabled(this.paginationResource.hasPrevious());
         nextButton.setEnabled(this.paginationResource.hasNext());
         lastButton.setEnabled(!this.paginationResource.isLast());
     }
+
+    protected Button getFirstButton() {
+        return this.firstButton;
+    }
+
+    protected Button getPreButton() {
+        return this.previousButton;
+    }
+
+    protected Button getNextButton() {
+        return this.nextButton;
+    }
+
+    protected Button getLastButton() {
+        return this.lastButton;
+    }
+
+    protected PaginationResource getPaginationResource() {
+        return this.paginationResource;
+    }
+
 }

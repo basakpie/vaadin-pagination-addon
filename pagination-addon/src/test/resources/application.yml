@@ -1,0 +1,18 @@
+---
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:hsqldb:mem:vaadin-pagination:charaset=UTF-8
+    username: sa
+    password:
+    driver-class-name: org.hsqldb.jdbcDriver
+  jpa:
+    properties:
+      hibernate:
+        show-sql: true
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    org.springframework: INFO
+    com.vaadin.addon.pagination: DEBUG
