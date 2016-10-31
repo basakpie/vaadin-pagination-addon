@@ -1,6 +1,5 @@
 package com.vaadin.addon.pagination;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -26,15 +25,6 @@ public class TestPagination extends Pagination {
     TestBeanRepository testBeanRepository;
 
     public TestPagination() {
-    }
-
-    @Before
-    public void setup() throws Exception {
-        loadingDate();
-    }
-
-    private void loadingDate() {
-
     }
 
     public List<TestBean> beans() {
