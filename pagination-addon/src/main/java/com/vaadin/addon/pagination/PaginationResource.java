@@ -23,7 +23,7 @@ public class PaginationResource implements Serializable {
     }
 
     public int page() {
-        return this.page;
+        return this.page == 0 ? 1 : this.page;
     }
 
     public int initIndex() {
@@ -81,7 +81,8 @@ public class PaginationResource implements Serializable {
     }
 
     public int totalPage() {
-        return limit == 0 ? 1 : (int) Math.ceil((double) total / (double) limit);
+        int totalPage = (limit == 0) ? 1 : (int) Math.ceil((double) total / (double) limit);
+        return totalPage == 0 ? 1 : totalPage;
     }
 
     public PaginationResource first() {

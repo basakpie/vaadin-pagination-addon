@@ -81,6 +81,7 @@ public class Pagination extends HorizontalLayout {
     public void setTotalCount(long total) {
     	paginationResource.setTotal(total);
     	totalPageLabel.setValue(String.valueOf(paginationResource.totalPage()));
+        buttonsEnabled();
     }
 
     public void setItemsPerPageEnabled(boolean enabled) {
