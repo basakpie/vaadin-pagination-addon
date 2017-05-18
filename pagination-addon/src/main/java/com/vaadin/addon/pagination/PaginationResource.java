@@ -3,7 +3,7 @@ package com.vaadin.addon.pagination;
 import java.io.Serializable;
 
 /**
- * Created by basakpie on 2016-10-13.
+ * Created by basakpie on 2017-05-18.
  */
 public class PaginationResource implements Serializable {
 

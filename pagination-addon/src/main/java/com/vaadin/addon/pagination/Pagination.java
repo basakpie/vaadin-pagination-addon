@@ -1,24 +1,20 @@
 package com.vaadin.addon.pagination;
 
+import com.vaadin.data.HasValue;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ValueChangeMode;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.ShortcutListener;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.themes.ValoTheme;
-
 /**
- * Created by basakpie on 2016-10-10.
+ * Created by basakpie on 2017-05-18.
  */
 @SuppressWarnings("unused")
 public class Pagination extends HorizontalLayout {
@@ -32,18 +28,17 @@ public class Pagination extends HorizontalLayout {
     HorizontalLayout itemsPerPage;
     HorizontalLayout pageControls;
 
-    final ComboBox itemsPerPageSelect = new ComboBox();
+    final ComboBox<Integer> itemsPerPageSelect = new ComboBox();
 
-    final TextField currentPageTextField = new TextField();
+    final TextField currentPageTextField = new TextField(null, "1");
     final Label totalPageLabel = new Label();
 
-    final Button firstButton    = new Button(FontAwesome.ARROW_CIRCLE_LEFT);
-    final Button previousButton = new Button(FontAwesome.ARROW_CIRCLE_O_LEFT);
-    final Button nextButton     = new Button(FontAwesome.ARROW_CIRCLE_O_RIGHT);
-    final Button lastButton     = new Button(FontAwesome.ARROW_CIRCLE_RIGHT);
+    final Button firstButton    = new Button(VaadinIcons.ARROW_CIRCLE_LEFT);
+    final Button previousButton = new Button(VaadinIcons.ARROW_CIRCLE_LEFT_O);
+    final Button nextButton     = new Button(VaadinIcons.ARROW_CIRCLE_RIGHT);
+    final Button lastButton     = new Button(VaadinIcons.ARROW_CIRCLE_RIGHT_O);
 
     public Pagination() {
-
     }
 
     public Pagination(PaginationResource paginationResource) {
@@ -66,13 +61,12 @@ public class Pagination extends HorizontalLayout {
     }
 
     public void setItemsPerPage(int... perPage) {
-        if(itemsPerPageSelect.size()>0) {
-            itemsPerPageSelect.removeAllItems();
+        List<Integer> items = new ArrayList<>();
+        for(int page : perPage) {
+            items.add(page);
         }
-        for(int i=0; i < perPage.length; i++) {
-            itemsPerPageSelect.addItem(perPage[i]);
-        }
-        itemsPerPageSelect.select(this.paginationResource.limit());
+        itemsPerPageSelect.setItems(items);
+        itemsPerPageSelect.setSelectedItem(this.paginationResource.limit());
         if(!itemsPerPageSelect.isSelected(this.paginationResource.limit())) {
             throw new IllegalArgumentException("itemsPerPageSelect.isSelected(paginationResource.size()) not found!");
         }
@@ -132,14 +126,13 @@ public class Pagination extends HorizontalLayout {
     private HorizontalLayout createItemsPerPage() {
         final Label itemsPerPageLabel = new Label("&nbsp;Items per page", ContentMode.HTML);
         itemsPerPageSelect.setTextInputAllowed(false);
-        itemsPerPageSelect.setImmediate(true);
-        itemsPerPageSelect.setNullSelectionAllowed(false);
+        itemsPerPageSelect.setEmptySelectionAllowed(false);
         itemsPerPageSelect.setWidth("80px");
         itemsPerPageSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        itemsPerPageSelect.addValueChangeListener((Property.ValueChangeListener) event -> {
-            int pageSize = (Integer)event.getProperty().getValue();
+        itemsPerPageSelect.addValueChangeListener((HasValue.ValueChangeListener) event -> {
+            int pageSize = (Integer)event.getValue();
             if(pageSize== paginationResource.limit()) return;
-            paginationResource.setLimit((Integer)event.getProperty().getValue());
+            paginationResource.setLimit((Integer)event.getValue());
             paginationResource.setPage(1);
             firePagedChangedEvent();
         });
@@ -156,36 +149,24 @@ public class Pagination extends HorizontalLayout {
         nextButton.setStyleName(ValoTheme.BUTTON_LINK);
         lastButton.setStyleName(ValoTheme.BUTTON_LINK);
 
-        firstButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                PaginationResource first = paginationResource.first();
-                buttonClickEvent(first);
-            }
+        firstButton.addClickListener(e -> {
+            PaginationResource first = paginationResource.first();
+            buttonClickEvent(first);
         });
 
-        previousButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                PaginationResource previous = paginationResource.previous();
-                buttonClickEvent(previous);
-            }
+        previousButton.addClickListener(e -> {
+            PaginationResource previous = paginationResource.previous();
+            buttonClickEvent(previous);
         });
 
-        nextButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                PaginationResource next = paginationResource.next();
-                buttonClickEvent(next);
-            }
+        nextButton.addClickListener(e -> {
+            PaginationResource next = paginationResource.next();
+            buttonClickEvent(next);
         });
 
-        lastButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                PaginationResource last = paginationResource.last();
-                buttonClickEvent(last);
-            }
+        lastButton.addClickListener(e -> {
+            PaginationResource last = paginationResource.last();
+            buttonClickEvent(last);
         });
 
         HorizontalLayout pageFields = createPageFields();
@@ -198,14 +179,8 @@ public class Pagination extends HorizontalLayout {
 
     @SuppressWarnings("serial")
 	private HorizontalLayout createPageFields() {
-        currentPageTextField.setValue(String.valueOf(paginationResource.page()));
-        currentPageTextField.setConverter(Integer.class);
-
-        final IntegerRangeValidator validator = new IntegerRangeValidator("Wrong page number", 0, paginationResource.totalPage());
-        currentPageTextField.addValidator(validator);
-
         currentPageTextField.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        currentPageTextField.setImmediate(true);
+        currentPageTextField.setValueChangeMode(ValueChangeMode.BLUR);
 
         currentPageTextField.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
             @Override
@@ -213,7 +188,8 @@ public class Pagination extends HorizontalLayout {
                 currentPageChangedEvent();
             }
         });
-        currentPageTextField.addValueChangeListener((Property.ValueChangeListener) event -> {
+
+        currentPageTextField.addValueChangeListener((HasValue.ValueChangeListener) event -> {
             currentPageChangedEvent();
         });
 
@@ -235,12 +211,16 @@ public class Pagination extends HorizontalLayout {
     }
 
     protected void currentPageChangedEvent() {
-        int currentPage = Integer.valueOf(String.valueOf(currentPageTextField.getValue()));
-        int pageNumber = paginationResource.page();
-        if (!currentPageTextField.isValid()) return;
-        if (currentPage==pageNumber) return;
-        paginationResource.setPage(currentPage);
-        firePagedChangedEvent();
+        try {
+            Integer.parseInt(currentPageTextField.getValue());
+            int currentPage = Integer.valueOf(currentPageTextField.getValue());
+            int pageNumber = paginationResource.page();
+            if (currentPage==pageNumber) return;
+            paginationResource.setPage(currentPage);
+            firePagedChangedEvent();
+        } catch (Exception e) {
+            return;
+        }
     }
 
     protected void buttonClickEvent(PaginationResource change) {

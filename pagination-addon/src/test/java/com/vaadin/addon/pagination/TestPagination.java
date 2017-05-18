@@ -67,7 +67,6 @@ public class TestPagination extends Pagination {
 
         // CurrentPage SetValue
         setCurrentPage(10);
-        currentPageTextField.removeAllValidators();
         currentPageChangedEvent();
         paginationAssert("currentPage", 10, 180, 200);
 
