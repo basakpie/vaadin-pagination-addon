@@ -155,15 +155,13 @@ Demo Server : http://127.0.0.1:8080
 
 == Building from source
 
-requires Java SE 1.7.0_79+
+requires Java SE 1.8+
 
 requires Maven 3.3.9+
 
 requires Tomcat 8.0.36+
 
-requires Eclipse Mars.2 4.5.2+ (Eclipse IDE for Java EE Developers 설치)
-
-requires Vaadin Framework 7.7.3+
+requires Vaadin Framework 8.0.6+
 
 == License & Author
 
