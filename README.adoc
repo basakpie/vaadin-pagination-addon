@@ -1,6 +1,9 @@
-=  Pagination Add-on for Vaadin 7
+=  Pagination Add-on for Vaadin
 
-Pagination is a UI component add-on for Vaadin 7.
+Pagination is a UI component add-on for Vaadin.
+
+- 0.0.4 -> Vaadin 7.x
+- 8.0.6 -> Vaadin 8.0.6 and newer
 
 image::data/screenshot/pagination.png[]
 
