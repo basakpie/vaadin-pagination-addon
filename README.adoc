@@ -145,10 +145,20 @@ pagination.addPageChangeListener(new PaginationChangeListener() {
 
 ## Building and running demo
 
+Linux/Mac
+
 [source,groovy,indent=0]
 ----
-mvn clean install
-mvn -pl pagination-demo spring-boot:run
+sh mvnw clean install
+sh mvnw -pl pagination-demo spring-boot:run
+----
+
+Windows
+
+[source,groovy,indent=0]
+----
+mvnw.cmd clean install
+mvnw.cmd -pl pagination-demo spring-boot:run
 ----
 
 Demo Server : http://127.0.0.1:8080
