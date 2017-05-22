@@ -175,13 +175,11 @@
 				<executions>
 					<!-- You are free to mark this as permanently ignored in Eclipse -->
 					<execution>
-						<configuration>
-							<!-- if you don't specify any modules, the plugin will find them -->
-						</configuration>
 						<goals>
-							<goal>resources</goal>
 							<goal>update-widgetset</goal>
 							<goal>compile</goal>
+							<goal>update-theme</goal>
+							<goal>compile-theme</goal>
 						</goals>
 					</execution>
 				</executions>
