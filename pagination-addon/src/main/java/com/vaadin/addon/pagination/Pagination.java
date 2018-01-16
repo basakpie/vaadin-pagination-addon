@@ -35,8 +35,8 @@ public class Pagination extends HorizontalLayout {
 
     final Button firstButton    = new Button(VaadinIcons.ARROW_CIRCLE_LEFT);
     final Button previousButton = new Button(VaadinIcons.ARROW_CIRCLE_LEFT_O);
-    final Button nextButton     = new Button(VaadinIcons.ARROW_CIRCLE_RIGHT);
-    final Button lastButton     = new Button(VaadinIcons.ARROW_CIRCLE_RIGHT_O);
+    final Button nextButton     = new Button(VaadinIcons.ARROW_CIRCLE_RIGHT_O);
+    final Button lastButton     = new Button(VaadinIcons.ARROW_CIRCLE_RIGHT);
 
     public Pagination() {
     }
